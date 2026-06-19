@@ -33,10 +33,6 @@ jobs:
             
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
-            ls -lR /
-
-            # Jednoznaczne wyszukanie pliku w całym systemie kontenera i kopia do /workspace
-            find / -name '*.pkg.tar.zst' -exec cp {} /workspace/ \; 2>/dev/null
 
             # Przywrócenie uprawnień roota dla plików w workspace, aby host (GitHub Actions) 
             # mógł nimi zarządzać i sprzątać bez błędów 'Permission denied'
@@ -88,5 +84,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: libindi-arch-arm64
-          path: "*.pkg.tar.zst"
+          path: "*.pkg.tar.*"
           retention-days: 14
