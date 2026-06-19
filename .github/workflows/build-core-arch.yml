@@ -32,7 +32,9 @@ jobs:
             chown -R builder:builder .
             
             # PKGDEST=/workspace wymusza zapisanie gotowego *.pkg.tar.zst w głównym katalogu
-            sudo -u builder PKGDEST=/workspace makepkg -s --noconfirm
+            # sudo -u builder PKGDEST=/workspace makepkg -s --noconfirm
+            # Budowanie pakietu jako użytkownik nie-root z jawnym przekazaniem PKGDEST
+            sudo -u builder env PKGDEST=/workspace makepkg -s --noconfirm
           "
   # # 2. Uruchomienie budowania wewnątrz kontenera Arch Linux ARM64
   #     - name: Build Arch package inside container
