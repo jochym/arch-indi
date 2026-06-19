@@ -33,18 +33,13 @@ makedepends=(cmake
              qt6-base)
 optdepends=('qt6-base: Qt client library')
 source=(git+https://github.com/indilib/indi#tag=v$pkgver)
-sha256sums=('0f35ffeedacbade9a0aec9a9bf0397692e22f9c2684c9bb4e0e3741418544f2c')
-
-prepare() {
-  git -C indi cherry-pick -n bf77bd1c26c268e5973cace1dc21807b42148539 # Fix build
-}
+sha256sums=('a83653921eb18d384aa21c99488b639685604d2568a131345247578067f8cb98')
 
 build() {
   cmake -B build -S indi \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DINDI_BUILD_QT_CLIENT=ON \
     -DUDEVRULES_INSTALL_DIR=/usr/lib/udev/rules.d \
-    -DFIX_WARNINGS=OFF \
     -DCMAKE_C_FLAGS="$CFLAGS -ffat-lto-objects" \
     -DCMAKE_CXX_FLAGS="$CXXFLAGS -ffat-lto-objects -Wp,-U_GLIBCXX_ASSERTIONS"
   cmake --build build
