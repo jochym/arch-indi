@@ -8,7 +8,7 @@ pkgrel=1
 pkgdesc='A distributed control protocol designed to operate astronomical instrumentation'
 url='https://www.indilib.org/index.php?title=Main_Page'
 license=(LGPL-2.1-only)
-arch=(x86_64)
+arch=(x86_64 aarch64)
 depends=(cblas
          cfitsio
          curl
