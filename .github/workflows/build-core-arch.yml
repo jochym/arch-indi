@@ -31,10 +31,11 @@ jobs:
             echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
             chown -R builder:builder .
             
-            # PKGDEST=/workspace wymusza zapisanie gotowego *.pkg.tar.zst w głównym katalogu
-            # sudo -u builder PKGDEST=/workspace makepkg -s --noconfirm
-            # Budowanie pakietu jako użytkownik nie-root z jawnym przekazaniem PKGDEST
-            sudo -u builder env PKGDEST=/workspace makepkg -s --noconfirm
+            # Budowanie pakietu w domyślnej lokalizacji
+            sudo -u builder makepkg -s --noconfirm
+
+            # Bezpośrednie przekopiowanie wyniku do katalogu montowania hosta
+            cp /home/builder/*.pkg.tar.zst /workspace/ 2>/dev/null || cp *.pkg.tar.zst /workspace/
           "
   # # 2. Uruchomienie budowania wewnątrz kontenera Arch Linux ARM64
   #     - name: Build Arch package inside container
