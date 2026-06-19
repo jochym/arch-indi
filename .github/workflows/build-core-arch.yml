@@ -33,6 +33,7 @@ jobs:
             
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
+            ls -lR /
 
             # Jednoznaczne wyszukanie pliku w całym systemie kontenera i kopia do /workspace
             find / -name '*.pkg.tar.zst' -exec cp {} /workspace/ \; 2>/dev/null
