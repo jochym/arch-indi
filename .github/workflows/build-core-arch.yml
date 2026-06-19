@@ -16,7 +16,11 @@ jobs:
 # 2. Uruchomienie budowania wewnątrz kontenera Arch Linux ARM64
       - name: Build Arch package inside container
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace lopsided/archlinux:latest /bin/bash -c "
+          docker run --rm \
+          --security-opt seccomp=unconfined \
+          -v ${{ github.workspace }}:/workspace \
+          -w /workspace \
+          lopsided/archlinux:latest /bin/bash -c "
             # Inicjalizacja pacmana i instalacja niezbędnych narzędzi
             pacman-key --init
             pacman-key --populate archlinux
