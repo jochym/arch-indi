@@ -34,8 +34,12 @@ jobs:
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
-            # Bezpośrednie przekopiowanie wyniku do katalogu montowania hosta
-            cp /home/builder/*.pkg.tar.zst /workspace/ 2>/dev/null || cp *.pkg.tar.zst /workspace/
+            # Jednoznaczne wyszukanie pliku w całym systemie kontenera i kopia do /workspace
+            find / -name '*.pkg.tar.zst' -exec cp {} /workspace/ \; 2>/dev/null
+
+            # Przywrócenie uprawnień roota dla plików w workspace, aby host (GitHub Actions) 
+            # mógł nimi zarządzać i sprzątać bez błędów 'Permission denied'
+            chown -R root:root /workspace
           "
   # # 2. Uruchomienie budowania wewnątrz kontenera Arch Linux ARM64
   #     - name: Build Arch package inside container
