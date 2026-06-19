@@ -13,28 +13,43 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Checkout INDI sources
-        uses: actions/checkout@v6
-        with:
-          repository: 'indilib/indi'
-          ref: refs/tags/v2.2.2
-          path: 'indi'
-
-      - name: Initialize pacman and install build tools
+# 2. Uruchomienie budowania wewnątrz kontenera Arch Linux ARM64
+      - name: Build Arch package inside container
         run: |
-          pacman-key --init
-          pacman-key --populate archlinux
-          pacman -Syu --noconfirm --needed base-devel git sudo
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace lopsided/archlinux:latest /bin/bash -c "
+            # Inicjalizacja pacmana i instalacja niezbędnych narzędzi
+            pacman-key --init
+            pacman-key --populate archlinux
+            pacman -Syu --noconfirm --needed base-devel git sudo
 
-      - name: Build Arch package
-        run: |
-          useradd -m builder
-          echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-          chown -R builder:builder .
+            # Budowanie pakietu jako użytkownik nie-root (wymóg makepkg)
+            useradd -m builder
+            echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+            chown -R builder:builder .
+            
+            sudo -u builder makepkg -s --noconfirm
+          "      
+      # - name: Checkout INDI sources
+      #   uses: actions/checkout@v6
+      #   with:
+      #     repository: 'indilib/indi'
+      #     ref: refs/tags/v2.2.2
+      #     path: 'indi'
+
+      # - name: Initialize pacman and install build tools
+      #   run: |
+      #     pacman-key --init
+      #     pacman-key --populate archlinux
+      #     pacman -Syu --noconfirm --needed base-devel git sudo
+
+      # - name: Build Arch package
+      #   run: |
+      #     useradd -m builder
+      #     echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+      #     chown -R builder:builder .
           
-          # -s automatycznie dociąga zależności z oficjalnych repozytoriów Archa
-          sudo -u builder makepkg -s --noconfirm
+      #     # -s automatycznie dociąga zależności z oficjalnych repozytoriów Archa
+      #     sudo -u builder makepkg -s --noconfirm
 
       - name: Upload compiled package
         uses: actions/upload-artifact@v4
