@@ -1,37 +1,55 @@
 # Maintainer: Mattia Procopio (astro.matto) <matto.astro at gmail dot com>
+# Modded for nightly HEAD builds
 pkgname=indi-3rdparty-libs
-pkgver=2.2.2
+pkgver=r4821.3a5b7c2  # makepkg i tak nadpisze tę wartość przez funkcję pkgver()
 pkgrel=1
-pkgdesc='Indi 3rd party libraries'
+pkgdesc='Indi 3rd party libraries - nightly HEAD build'
 arch=(x86_64 aarch64)
-url='https://indilib.org'
+url='https://github.com/jochym/indi-3rdparty'
 license=(LGPLv2)
 depends=(ffmpeg
          libgphoto2
          libindi
          pipewire-jack
          wireplumber)
-makedepends=(cmake)
-source=(${pkgname}-${pkgver}::https://github.com/indilib/indi-3rdparty/archive/refs/tags/v$pkgver.tar.gz)
+makedepends=(cmake git) # git jest niezbędny do pobrania i działania pkgver()
+provides=(indi-3rdparty-libs)
+conflicts=(indi-3rdparty-libs)
+
+# Klonujemy bezpośrednio repozytorium gita do katalogu '3rdparty'
+source=('3rdparty::git+https://github.com/jochym/indi-3rdparty.git')
 sha256sums=('SKIP')
 
+pkgver() {
+  cd "${srcdir}/3rdparty"
+  # Format: [ostatni_tag].r[liczba_commitów].[hash]
+  git describe --long --tags 2>/dev/null | sed 's/\([^-]*-\)*g/r/; s/-/./g; s/^v//' || \
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
 prepare() {
-  mkdir -p build
+  # Bezpieczne czyszczenie i tworzenie katalogu build poza strukturą źródeł gita
+  rm -rf "${srcdir}/build"
+  mkdir -p "${srcdir}/build"
 }
 
 build() {
-  cd build
+  cd "${srcdir}/build"
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         -DBUILD_LIBS=1 \
-	-DQHY_FIRMWARE_INSTALL_DIR=/usr/lib/firmware/qhy \
-        ../indi-3rdparty-${pkgver}
+        -DQHY_FIRMWARE_INSTALL_DIR=/usr/lib/firmware/qhy \
+        "${srcdir}/3rdparty"
   make
 }
 
 package() {
-  cd build
+  cd "${srcdir}/build"
   make DESTDIR="$pkgdir" install
-  sed -e 's|-D $env{DEVNAME}|-p $env{BUSNUM},$env{DEVNUM}|' -i "$pkgdir"/usr/lib/udev/rules.d/85-qhyccd.rules
-  sed -e 's|/qhy/qhy|/qhy|' -i "$pkgdir"/usr/lib/udev/rules.d/85-qhyccd.rules
+
+  # Poprawki udev dla QHY
+  if [ -f "$pkgdir"/usr/lib/udev/rules.d/85-qhyccd.rules ]; then
+    sed -e 's|-D $env{DEVNAME}|-p $env{BUSNUM},$env{DEVNUM}|' -i "$pkgdir"/usr/lib/udev/rules.d/85-qhyccd.rules
+    sed -e 's|/qhy/qhy|/qhy|' -i "$pkgdir"/usr/lib/udev/rules.d/85-qhyccd.rules
+  fi
 }
