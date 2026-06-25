@@ -11,7 +11,8 @@ depends=(ffmpeg
          libgphoto2
          libindi
          pipewire-jack
-         wireplumber)
+         wireplumber
+         libftdi)
 makedepends=(cmake git) # git jest niezbędny do pobrania i działania pkgver()
 provides=(indi-3rdparty-libs)
 conflicts=(indi-3rdparty-libs)
