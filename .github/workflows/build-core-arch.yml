@@ -35,15 +35,22 @@ jobs:
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
-            cp PKGBUILD.3rdlibs PKGBUILD
-            # Budowanie pakietu w domyślnej lokalizacji
-            sudo -u builder makepkg -s --noconfirm
-
-            cp PKGBUILD.3rddrivers PKGBUILD
-            # Budowanie pakietu w domyślnej lokalizacji
-            sudo -u builder makepkg -s --noconfirm
-
+            ls /workspace/
+            sudo pacman -U /workspace/*.pkg.tar.*
             
+            cp PKGBUILD.3rdparty-libs PKGBUILD
+            # Budowanie pakietu w domyślnej lokalizacji
+            sudo -u builder makepkg -s --noconfirm
+
+            ls /workspace/
+            sudo pacman -U /workspace/*.pkg.tar.*
+
+            cp PKGBUILD.3rdparty-drivers PKGBUILD
+            # Budowanie pakietu w domyślnej lokalizacji
+            sudo -u builder makepkg -s --noconfirm
+
+            ls /workspace/
+            sudo pacman -U /workspace/*.pkg.tar.*            
             
             # Przywrócenie uprawnień roota dla plików w workspace, aby host (GitHub Actions) 
             # mógł nimi zarządzać i sprzątać bez błędów 'Permission denied'
