@@ -1,6 +1,6 @@
 # Maintainer: Mattia Procopio (astro.matto) <matto.astro at gmail dot com>
 # Modded for nightly HEAD builds
-pkgname=indi-3rdparty-libs
+pkgname=indi-3rdparty-libs-git
 pkgver=r4821.3a5b7c2  # makepkg i tak nadpisze tę wartość przez funkcję pkgver()
 pkgrel=1
 pkgdesc='Indi 3rd party libraries - nightly HEAD build'
