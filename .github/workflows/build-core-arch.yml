@@ -35,6 +35,8 @@ jobs:
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
+            echo "===================== After core build ==================="
+
             ls /workspace/
             sudo pacman -U /workspace/*.pkg.tar.*
             
@@ -42,12 +44,15 @@ jobs:
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
+            echo "===================== After libs build ==================="
             ls /workspace/
             sudo pacman -U /workspace/*.pkg.tar.*
 
             cp PKGBUILD.3rdparty-drivers PKGBUILD
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
+
+            echo "===================== After drivers build ==================="
 
             ls /workspace/
             sudo pacman -U /workspace/*.pkg.tar.*            
