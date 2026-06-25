@@ -1,49 +1,60 @@
 # Maintainer: Mattia Procopio (astro.matto) <matto.astro at gmail dot com>
+# Modded for nightly HEAD builds
 pkgname=indi-3rdparty-drivers
-pkgver=2.2.2
+pkgver=r4821.3a5b7c2  # Nadpisywane dynamicznie przez pkgver()
 pkgrel=1
-pkgdesc="Indi 3rd party drivers"
-arch=(x86_64 aarch64)
-url="https://indilib.org"
+pkgdesc="Indi 3rd party drivers - nightly HEAD build"
+arch=(aarch64)
+url="https://github.com/jochym/indi-3rdparty"
 license=(LGPLv2)
+
+# Wspólne zależności
 depends=(dfu-util
          fxload
          gpsd
-         indi-3rdparty-libs
+         indi-3rdparty-libs-git
          libdc1394
          limesuite
          urjtag
          zeromq)
-depends_aarch64=(dfu-util
-                 fxload
-                 gpsd
-                 indi-3rdparty-libs
-                 libdc1394
-                 limesuite
-                 pigpio
-                 urjtag
-                 zeromq)
-makedepends=(cmake)
-makedepends_aarch64=(cmake libgpiod)
-source=(${pkgname}-${pkgver}::https://github.com/indilib/indi-3rdparty/archive/refs/tags/v$pkgver.tar.gz)
-sha256sums=('ea4e90f3549cb28860d0d2a5820734579d4aa5b8c04ba202bc413ce5ffdb0377')
+makedepends=(cmake git)
 options=(!lto)
 install=drivers.install
 
+provides=(indi-3rdparty-drivers)
+conflicts=(indi-3rdparty-drivers)
+
+# Zależności specyficzne dla architektury aarch64 (Raspberry Pi itp.)
+if [ "$CARCH" = "aarch64" ]; then
+  depends+=(pigpio)
+  makedepends+=(libgpiod)
+fi
+
+# Klonowanie repozytorium git do katalogu '3rdparty'
+source=('3rdparty::git+https://github.com/jochym/indi-3rdparty.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/3rdparty"
+  git describe --long --tags 2>/dev/null | sed 's/\([^-]*-\)*g/r/; s/-/./g; s/^v//' || \
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
 prepare() {
-  mkdir -p build
+  rm -rf "${srcdir}/build"
+  mkdir -p "${srcdir}/build"
 }
 
 build() {
-  cd build
+  cd "${srcdir}/build"
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
-	-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-	-DSKIP_SETCAP=yes \
-	../indi-3rdparty-$pkgver
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+        -DSKIP_SETCAP=yes \
+        "${srcdir}/3rdparty"
   make
 }
 
 package() {
-  cd build
+  cd "${srcdir}/build"
   make DESTDIR="$pkgdir" install
 }
