@@ -19,7 +19,7 @@ depends=(dfu-util
          zeromq)
 makedepends=(cmake git)
 options=(!lto)
-install=drivers.install
+# install=drivers.install
 
 provides=(indi-3rdparty-drivers)
 conflicts=(indi-3rdparty-drivers)
