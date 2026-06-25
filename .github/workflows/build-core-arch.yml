@@ -31,7 +31,7 @@ jobs:
             echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
             chown -R builder:builder .
 
-            cp PKGBUILD.core PKGBUILD
+            cp core/PKGBUILD PKGBUILD
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
@@ -40,7 +40,7 @@ jobs:
             ls /workspace/
             sudo pacman -U /workspace/*.pkg.tar.*
             
-            cp PKGBUILD.3rdparty-libs PKGBUILD
+            cp 3rdparty-libs/PKGBUILD PKGBUILD
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
@@ -48,7 +48,7 @@ jobs:
             ls /workspace/
             sudo pacman -U /workspace/*.pkg.tar.*
 
-            cp PKGBUILD.3rdparty-drivers PKGBUILD
+            cp 3rdparty-drivers/PKGBUILD PKGBUILD
             # Budowanie pakietu w domyślnej lokalizacji
             sudo -u builder makepkg -s --noconfirm
 
