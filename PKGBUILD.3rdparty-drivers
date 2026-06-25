@@ -33,6 +33,7 @@ fi
 # Klonowanie repozytorium git do katalogu '3rdparty'
 source=('3rdparty::git+https://github.com/jochym/indi-3rdparty.git')
 sha256sums=('SKIP')
+srcdir="."
 
 pkgver() {
   cd "${srcdir}/3rdparty"
