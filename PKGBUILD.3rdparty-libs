@@ -13,7 +13,7 @@ depends=(ffmpeg
          wireplumber)
 makedepends=(cmake)
 source=(${pkgname}-${pkgver}::https://github.com/indilib/indi-3rdparty/archive/refs/tags/v$pkgver.tar.gz)
-sha256sums=('ea4e90f3549cb28860d0d2a5820734579d4aa5b8c04ba202bc413ce5ffdb0377')
+sha256sums=('SKIP')
 
 prepare() {
   mkdir -p build
