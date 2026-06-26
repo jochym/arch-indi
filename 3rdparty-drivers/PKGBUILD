@@ -10,7 +10,6 @@ license=(LGPLv2)
 
 # Wspólne zależności
 depends=(dfu-util
-         fxload
          gpsd
          indi-3rdparty-libs-git
          libdc1394
@@ -50,6 +49,9 @@ build() {
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         -DSKIP_SETCAP=yes \
+        -DWITH_QHY=OFF \
+        -DWITH_PI_ROOF=OFF \
+        -DWITH_PI_FOCUS=OFF \
         "${srcdir}/3rdparty"
   make
 }
