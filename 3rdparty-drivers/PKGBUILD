@@ -12,7 +12,7 @@ license=(LGPLv2)
 depends=(#dfu-util
          #gpsd
          indi-3rdparty-libs-git
-         #libdc1394
+         libdc1394
          #limesuite
          #urjtag
          libraw
