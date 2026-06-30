@@ -91,6 +91,9 @@ jobs:
             # 3. Budowanie i instalacja DRIVERS
             echo '===================== Building DRIVERS ==================='
             cd /workspace/3rdparty-drivers
+            
+            sudo yay -S dfu-util gpsd libdc1394 limesuite urjtag pigpio
+            
             sudo -u builder makepkg -sCC --noconfirm
             sudo pacman -U --noconfirm *.pkg.tar.* # Przywrócenie uprawnień roota dla plików w workspace
             chown -R root:root /workspace
