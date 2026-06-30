@@ -9,12 +9,12 @@ url="https://github.com/jochym/indi-3rdparty"
 license=(LGPLv2)
 
 # Wspólne zależności
-depends=(dfu-util
-         gpsd
+depends=(#dfu-util
+         #gpsd
          indi-3rdparty-libs-git
-         libdc1394
-         limesuite
-         urjtag
+         #libdc1394
+         #limesuite
+         #urjtag
          zeromq)
 makedepends=(cmake git)
 options=(!lto)
@@ -23,11 +23,11 @@ options=(!lto)
 provides=(indi-3rdparty-drivers)
 conflicts=(indi-3rdparty-drivers)
 
-# Zależności specyficzne dla architektury aarch64 (Raspberry Pi itp.)
-if [ "$CARCH" = "aarch64" ]; then
-  depends+=(pigpio)
-  makedepends+=(libgpiod)
-fi
+# # Zależności specyficzne dla architektury aarch64 (Raspberry Pi itp.)
+# if [ "$CARCH" = "aarch64" ]; then
+#   depends+=(pigpio)
+#   makedepends+=(libgpiod)
+# fi
 
 # Klonowanie repozytorium git do katalogu '3rdparty'
 source=('3rdparty::git+https://github.com/jochym/indi-3rdparty.git')
@@ -52,6 +52,12 @@ build() {
         -DWITH_QHY=OFF \
         -DWITH_PI_ROOF=OFF \
         -DWITH_PI_FOCUS=OFF \
+        -DWITH_GPS=OFF \
+        -DWITH_SPI=OFF \
+        -DWITH_GPIO=OFF \
+        -DWITH_URJTAG=OFF \
+        -DWITH_LIME=OFF \
+        -DWITH_DC1394=OFF \
         "${srcdir}/3rdparty"
   make
 }
