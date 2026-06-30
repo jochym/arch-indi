@@ -15,6 +15,7 @@ depends=(#dfu-util
          #libdc1394
          #limesuite
          #urjtag
+         libraw
          zeromq)
 makedepends=(cmake git)
 options=(!lto)
