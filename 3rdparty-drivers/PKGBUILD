@@ -10,7 +10,7 @@ license=(LGPLv2)
 
 # Wspólne zależności
 depends=(#dfu-util
-         #gpsd
+         gpsd
          indi-3rdparty-libs-git
          libdc1394
          #limesuite
