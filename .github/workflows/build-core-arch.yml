@@ -97,6 +97,7 @@ jobs:
             sudo -u builder makepkg -sCC --noconfirm
             sudo pacman -U --noconfirm *.pkg.tar.* # Przywrócenie uprawnień roota dla plików w workspace
             chown -R root:root /workspace
+            find /workspace -name '*.pkg.tar.*'
           "
       - name: Upload compiled package
         uses: actions/upload-artifact@v4
